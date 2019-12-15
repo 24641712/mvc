@@ -41,7 +41,7 @@ public class RedisTest {
         List<String> list = new ArrayList<>();
         list.add("1");
         list.add("2");
-//        redisUtil.lSet("list",list);
+        redisUtil.lSet("list",list);
         List<Object> list1 = redisUtil.lGet("list",0,-1);
         log.info(list1.toString());
 
