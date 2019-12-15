@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>网站首页</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<button onclick="hello()">点击这里（requestbody）</button><br><br>
+<button onclick="hellojson()">点击这里（modelAttribut）</button>
+
+<div id="vue_det">
+    <p>site:{{ site }}</p>
+    <p>url:{{ url | capitalize }}</p>
+    <input v-model="url">
+    <p>Alexa : {{alexa}}</p>
+    <p v-if="seen">现在你看到我了</p>
+    <div v-else>
+        Not sorry
+    </div>
+    <button v-on:click="reverseMessage">反转字符串</button>
+    <button v-on:click="getGoodList">Ajax</button>
+
+    <p>{{ details() }}</p>
+
+</div>
+
+<div id="app">
+    <ol>
+        <li v-for="site in sites">
+            {{ site.object.name }}
+            {{ site.object.url }}
+            {{ site.object.slogan }}
+        </li>
+    </ol>
+</div>
+
+<div id="app1">
+    {{ info }}
+</div>
+
+<script>
+
+    // 我们的数据对象
+    var data = { site: "菜鸟教程", url: "www.runoob.com", alexa: 10000,seen: false}
+    new Vue({
+        el: '#vue_det',
+        data: data,
+        methods:{
+            details:function () {
+                console.log("查看运行结果。");
+                return "这是一个方法。"
+            },
+            reverseMessage: function () {
+                this.url = this.url.split('').reverse().join('');
+            },
+            getGoodList:function () {
+                console.log("是否可以使用Ajax.")
+
+                // 也可以通过 params 设置参数：
+                axios.get('./hello3', {
+                    params: {
+                        ID: 12345
+                    }
+                }).then(function (response) {
+                        console.log(response);
+                }).catch(function (error) {
+                        console.log(error);
+                });
+
+                // axios.post('./hello3')
+                //     .then(function (response) {
+                //         console.log(response);
+                //     })
+                //     .catch(function (error) {
+                //         console.log(error);
+                //     });
+            }
+
+        },
+        filters: {
+            capitalize: function (value) {
+                if (!value) return ''
+                value = value.toString()
+                return value.charAt(0).toUpperCase() + value.slice(1)
+            }
+        }
+    })
+
+    new Vue({
+        el: '#app',
+        data: {
+            sites: [
+                {     object: {
+                        name: '菜鸟教程1',
+                        url: 'http://www.runoob1.com',
+                        slogan: '1学的不仅是技术，更是梦想！'
+                    } },
+                {     object: {
+                        name: '菜鸟教程2',
+                        url: 'http://www.runoob2.com',
+                        slogan: '2学的不仅是技术，更是梦想！'
+                    } },
+                {     object: {
+                        name: '菜鸟教程3',
+                        url: 'http://www.runoob3.com',
+                        slogan: '3学的不仅是技术，更是梦想！'
+                    } }
+            ]
+        }
+    })
+
+    new Vue({
+        el: '#app1',
+        data () {
+            return {
+                info: null
+            }
+        },
+        mounted () {
+            axios
+                .get('https://www.runoob.com/try/ajax/json_demo.json')
+                .then(function (response) {
+                    this.info = response.data.sites
+                }).
+                 catch(function (error) { // 请求失败处理
+                console.log(error);
+            });
+        }
+    })
+
+
+
+</script>
+
+<script type="text/javascript">
+
+function hello() {
+    var user = {
+        "id":100,
+        "name":"ccl",
+        "sex":"n",
+        "age":12,
+    }
+    $.ajax({
+       url:"./hello1",
+       type:"POST",
+       dateType:"JSON",
+       data : user,
+       success : function (data) {
+           console.log(data)
+        }
+    })
+}
+
+function hellojson() {
+    var student = {
+        "id":100,
+        "name":"ccl",
+        "sex":"n",
+        "age":12,
+        "contacts" : ["12313","123213123"]
+    }
+    $.ajax({
+        url:"./hello",
+        type:"POST",
+        contentType:"application/json",
+        dateType:"JSON",
+        data : JSON.stringify(student),
+        success : function (data) {
+            console.log(data)
+        }
+    })
+}
+
+
+</script>
+
+</body>
+</html>
